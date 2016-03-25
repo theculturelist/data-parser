@@ -1,0 +1,78 @@
+{
+  "name": "Museum of Jurassic Technology",
+  "abbreviation": "MJT",
+  "description": "The Museum of Jurassic Technology in Los Angeles, California is an educational institution dedicated to the advancement of knowledge and the public appreciation of the Lower Jurassic.",
+  "website": "www.mjt.org",
+  "address": {
+    "formatted": "9241 Venice Blvd, Culver City, CA 90323",
+    "street_number": "9241",
+    "route": "Venice Blvd",
+    "city": "Culver City",
+    "state": "California",
+    "state_short": "CA",
+    "postal_code": "90323"
+    },
+  "phone": [
+    {
+      "line": "main",
+      "number": "3108366131"
+    }
+  ],
+  "hours": {
+    "monday": "Closed",
+    "tuesday": "Closed",
+    "wednesday": "Closed",
+    "thursday": "Noon - 6pm",
+    "friday": "2pm - 8pm",
+    "saturday": "Noon - 6pm",
+    "sunday": "Noon - 6pm",
+    "closed": "Thanksgiving Day, Christmas Day, New Years Day"
+  },
+  "admission": [
+    {
+      "type": "Adult",
+      "price": 800,
+      "note": ""
+    },
+    {
+      "type": "Seniors",
+      "price": 500,
+      "note": ""
+    },
+    {
+      "type": "Students",
+      "price": 500,
+      "note": ""
+    },
+    {
+      "type": "Children",
+      "price": 0,
+      "note": "(Under 12)"
+    },
+    {
+      "type": "Children",
+      "price": 500,
+      "note": "(13-21)"
+    },
+    {
+      "type": "Military",
+      "price": 150,
+      "note": "(In Active Uniform)"
+    },
+    {
+      "type": "Unemployed",
+      "price": 500,
+      "note": ""
+    },
+    {
+      "type": "Disabled",
+      "price": 150,
+      "note": ""
+    },
+    {
+      "type": "Parking",
+      "price": 0
+    }
+  ],
+  "free_days": ""
+}

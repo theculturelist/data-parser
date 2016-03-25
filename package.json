@@ -1,0 +1,15 @@
+{
+  "name": "tcl-data-converter",
+  "version": "0.1.0",
+  "description": "Parser to convert institution csv to json",
+  "main": "dataparser.js",
+  "dependencies": {
+    "sync-request": "^3.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lucas K Allmon",
+  "license": "MIT"
+}
