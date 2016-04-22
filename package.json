@@ -4,12 +4,19 @@
   "description": "Parser to convert institution csv to json",
   "main": "dataparser.js",
   "dependencies": {
+    "csvtojson": "^0.5.3",
     "sync-request": "^3.0.0"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "babel-eslint": "^6.0.3",
+    "eslint": "^2.8.0",
+    "eslint-config-airbnb": "^7.0.0",
+    "eslint-plugin-import": "^1.5.0"
   },
   "author": "Lucas K Allmon",
-  "license": "MIT"
+  "license": "MIT",
+  "eslintConfig": {
+    "extends": "airbnb",
+    "parser": "babel-eslint"
+  }
 }
