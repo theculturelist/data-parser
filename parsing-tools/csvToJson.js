@@ -2,7 +2,7 @@ const files = require('fs');
 const Converter = require('csvtojson').Converter;
 const converter = new Converter();
 
-files.createReadStream('./Institutions.csv').pipe(converter);
+files.createReadStream('./institutions.csv').pipe(converter);
 
 converter.on('end_parsed', (jsonArray) => {
   const finalFile = JSON.stringify(jsonArray);
