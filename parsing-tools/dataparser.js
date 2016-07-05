@@ -12,7 +12,7 @@ const getFormattedAddress = (el) => {
 
 const getformattedPhoneNumber = (phoneNumber) => {
   if (phoneNumber === 0) {
-    console.warning('Missing a Phone Number');
+    console.error('Missing a Phone Number');
     return 'None';
   } else if (phoneNumber !== 0) {
     const phone = phoneNumber.toString();
