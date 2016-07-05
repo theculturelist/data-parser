@@ -2,15 +2,14 @@
 
 This converts a monolithic JSON file into the correct objects.
 
-Currently:
+Current Workflow:
 - convert a CSV file from Excel to JSON with an external tool
 - Paste that json into the `input.json` file
 - run `node dataparser.js`
-- run `node geoparser.js` to run the objects through googles location api
+- run `node geoparser.js` to run the objects through googles location API
 - it spits the results into file into `geo.json`
-- manually copy paste `geo.json` to `institutions.json` and run a prettifier on it
+- manually copy paste `geo.json` to institutions file in App
 
 TODO:
-
-- make the whole thing automagic
+- make csvToJson.js work correctly
 - make the geoparser function async
