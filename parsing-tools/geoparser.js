@@ -1,6 +1,7 @@
 const fs = require('fs');
+const config = require('../config');
 const request = require('sync-request');
-const KEY = 'AIzaSyDjU72FqvTF9iVJAeaBDak8Hovej9smr40';
+const KEY = config.maps.apiKey;
 const URL = 'https://maps.googleapis.com/maps/api/geocode/json?';
 
 const input = JSON.parse(fs.readFileSync('formatted.json', 'utf8'));
@@ -14,4 +15,5 @@ input.forEach((el) => {
   console.log(`Assigning Geolocation to ${el.name}`);
   el.location = getLocation(el);
 });
-fs.writeFileSync('final.json', JSON.stringify(input));
+
+fs.writeFile('final.json', JSON.stringify(input));

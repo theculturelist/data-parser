@@ -1,20 +1,25 @@
 {
-  "name": "tcl-data-converter",
-  "version": "0.1.0",
-  "description": "Parser to convert institution csv to json",
+  "name": "data-parser",
+  "author": "Lucas K Allmon",
+  "license": "MIT",
+  "version": "0.2.0",
+  "description": "Parser to generate venue json",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theculturelist/data-parser"
+  },
   "main": "dataparser.js",
   "dependencies": {
-    "csvtojson": "^0.5.3",
+    "node-fieldbook": "^1.1.1",
     "sync-request": "^3.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.3",
-    "eslint": "^2.8.0",
+    "eslint": "^2.13.1",
     "eslint-config-airbnb": "^7.0.0",
-    "eslint-plugin-import": "^1.5.0"
+    "eslint-plugin-import": "^1.5.0",
+    "eslint-plugin-react": "^4.3.0",
   },
-  "author": "Lucas K Allmon",
-  "license": "MIT",
   "eslintConfig": {
     "extends": "airbnb",
     "parser": "babel-eslint"
