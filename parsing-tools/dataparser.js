@@ -1,24 +1,34 @@
-// Builds a json file from a specifically formatted CSV file.
-const files = require('fs');
-const inputFile = JSON.parse(files.readFileSync('input.json', 'utf8'));
-const finalArray = [];
+// Pulls data from Fieldbook, parses it to JSON objects
+const config = require('../config');
+const fs = require('fs');
+const Fieldbook = require('node-fieldbook');
 
-const getFormattedAddress = (el) => {
+const book = new Fieldbook({
+  username: config.fieldbook.username,
+  password: config.fieldbook.password,
+  book: config.fieldbook.book,
+});
+
+const formatAddress = (el) => {
   if (el) {
     return `${el.street_number} ${el.route}, ${el.city}, ${el.state_short} ${el.postal_code}`;
   }
   return console.error(`Problem with ${el.name}`);
 };
 
-const getformattedPhoneNumber = (phoneNumber) => {
-  if (phoneNumber === 0) {
-    console.error('Missing a Phone Number');
-    return 'None';
-  } else if (phoneNumber !== 0) {
-    const phone = phoneNumber.toString();
-    return `(${phone.substring(0, 3)})${phone.substring(3, 6)}-${phone.substring(6, 10)}`;
+const formatPhoneNumber = (phoneNumber) => {
+  let phone;
+  switch (phoneNumber) {
+    case null:
+      console.warn('Missing a Phone Number');
+      return 'None';
+    case 0:
+      console.warn('Missing a Phone Number');
+      return 'None';
+    default:
+      phone = phoneNumber.toString();
+      return `(${phone.substring(0, 3)})${phone.substring(3, 6)}-${phone.substring(6, 10)}`;
   }
-  return console.error('Problem with a Phone Number');
 };
 
 const buildJSON = (el) => {
@@ -35,7 +45,7 @@ const buildJSON = (el) => {
     },
     free_days: el.free_days === 0 || null ? null : el.free_days,
     address: {
-      formatted_address: getFormattedAddress(el),
+      formatted_address: formatAddress(el),
       street_number: el.street_number,
       route: el.route,
       city: el.city,
@@ -44,9 +54,10 @@ const buildJSON = (el) => {
       postal_code: el.postal_code,
     },
     location: {},
+    related_venues: [el.related_venues],
     phone: [{
       number: Number(el.phone_number),
-      number_formatted: getformattedPhoneNumber(el.phone_number),
+      number_formatted: formatPhoneNumber(el.phone_number),
     }],
     hours: {
       monday: el.monday,
@@ -78,13 +89,18 @@ const buildJSON = (el) => {
       el.tag_2,
       el.tag_3,
       el.tag_4,
-      el.tag_5].filter((tag) => { if (tag !== 'NULL' || 0) { return tag; } return false; }),
+      el.tag_5].filter((tag) => { if (tag !== null || 0) { return tag; } return false; }),
   };
-  finalArray.push(institution);
+  return institution;
 };
 
-inputFile.forEach(buildJSON);
-console.log('Finished Building');
-const finalFile = JSON.stringify(finalArray);
-files.writeFileSync('formatted.json', finalFile);
-console.log('File Writen as formatted.json');
+const writefileAsJson = (file, name) => {
+  const finalFile = JSON.stringify(file);
+  fs.writeFileSync(`${name}.json`, finalFile);
+  console.log(`File written as ${name}.json`);
+};
+
+book.getSheet('venues')
+  .then((data) => { return data.map(buildJSON); })
+  .then((data) => { writefileAsJson(data, 'formatted'); })
+  .catch((error) => { console.log(`Error: ${error}`); });
