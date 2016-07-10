@@ -35,6 +35,7 @@ const buildJSON = (el) => {
   const thumbnailPlaceholder = '/v1455314703/Placeholder-thumb_ahys1p.jpg';
   const widescreenPlaceholder = '/v1455314704/Placeholder-16x9_zpm4cq.jpg';
   const institution = {
+    id: el.id,
     name: el.name,
     abbreviation: el.abbreviation === 0 || null ? null : el.abbreviation,
     description: el.description,

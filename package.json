@@ -18,7 +18,8 @@
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^7.0.0",
     "eslint-plugin-import": "^1.5.0",
-    "eslint-plugin-react": "^4.3.0",
+    "eslint-plugin-jsx-a11y": "^0.6.2",
+    "eslint-plugin-react": "^4.3.0"
   },
   "eslintConfig": {
     "extends": "airbnb",
