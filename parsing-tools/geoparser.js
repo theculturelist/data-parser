@@ -4,16 +4,18 @@ const request = require('sync-request');
 const KEY = config.maps.apiKey;
 const URL = 'https://maps.googleapis.com/maps/api/geocode/json?';
 
-const input = JSON.parse(fs.readFileSync('formatted.json', 'utf8'));
-const getLocation = (el) => {
-  const res = request('GET', `${URL}address=${el.address.formatted_address}&key=${KEY}`);
+const venues = JSON.parse(fs.readFileSync('formatted.json', 'utf8'));
+const venueKeys = Object.keys(venues);
+
+const getLocation = (venue) => {
+  const res = request('GET', `${URL}address=${encodeURIComponent(venue.address.formatted_address)}&key=${KEY}`);
   const body = JSON.parse(res.getBody('utf8'));
   return body.results[0].geometry.location;
 };
-
-input.forEach((el) => {
-  console.log(`Assigning Geolocation to ${el.name}`);
-  el.location = getLocation(el);
+//
+venueKeys.forEach((key) => {
+  console.log(`Assigning Geolocation to ${venues[key].name}`);
+  venues[key].location = getLocation(venues[key]);
 });
 
-fs.writeFile('final.json', JSON.stringify(input));
+fs.writeFile('final.json', JSON.stringify(venues));
