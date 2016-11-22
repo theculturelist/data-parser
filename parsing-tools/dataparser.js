@@ -42,14 +42,14 @@ const buildObject = (el) => {
   const institution = {
     [institutionKey]: {
       name: el.name,
-      abbreviation: el.abbreviation === 0 || null ? null : el.abbreviation,
+      abbreviation: el.abbreviation === null ? null : el.abbreviation,
       description: el.description,
       website: el.website,
       media: {
-        thumbnail: el.image_thumbnail === 0 || null ? thumbnailPlaceholder : el.image_thumbnail,
-        widescreen: el.image_widescreen === 0 || null ? widescreenPlaceholder : el.image_widescreen,
+        thumbnail: el.image_thumbnail === null ? thumbnailPlaceholder : el.image_thumbnail,
+        widescreen: el.image_widescreen === null ? widescreenPlaceholder : el.image_widescreen,
       },
-      free_days: el.free_days === 0 || null ? null : el.free_days,
+      free_days: el.free_days === null ? null : el.free_days,
       address: {
         formatted_address: formatAddress(el),
         street_number: el.street_number,
@@ -72,7 +72,7 @@ const buildObject = (el) => {
         friday: el.friday,
         saturday: el.saturday,
         sunday: el.sunday,
-        closed_on: el.closed_on === 0 || null ? null : el.closed_on,
+        closed_on: el.closed_on === null ? null : el.closed_on,
       },
       admission: [
         { type: 'Adult', price: el.adult_1, note: el.adult_1_note },
