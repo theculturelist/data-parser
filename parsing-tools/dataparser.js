@@ -13,43 +13,46 @@ const formatAddress = (el) => {
   if (el) {
     return `${el.street_number} ${el.route}, ${el.city}, ${el.state_short} ${el.postal_code}`;
   }
-  return console.error(`Problem with ${el.name}`);
+  return console.error(`Problem with ${el.name}`) //eslint-disable-line
 };
 
 const formatPhoneNumber = (phoneNumber) => {
   let phone;
   switch (phoneNumber) {
     case null:
-      console.warn('Missing a Phone Number');
+      console.warn('Missing a Phone Number')  //eslint-disable-line
       return 'None';
     case 0:
-      console.warn('Missing a Phone Number');
+      console.warn('Missing a Phone Number')  //eslint-disable-line
       return 'None';
     default:
       phone = phoneNumber.toString();
-      return `(${phone.substring(0, 3)})${phone.substring(3, 6)}-${phone.substring(6, 10)}`;
+      return `(${phone.substring(0, 3)}) ${phone.substring(3, 6)}-${phone.substring(6, 10)}`;
   }
 };
 
-const venueKeyMaker = (name) => {
-  return name.trim().replace(/[^A-Za-z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase();
+const venueKeyMaker = (name) => (
+  name.trim().replace(/[^A-Za-z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()
+);
+
+const objectMaker = (array) => {
+  const newObject = {};
+  array.map((item) => { if (item !== null) { newObject[item] = true; } return false; });
+  return newObject;
+};
+
+const properName = (string) => {
+  if (string !== null) {
+    return true;
+  }
 };
 
 const buildObject = (el) => {
   const thumbnailPlaceholder = 'Placeholder-thumb_ahys1p.jpg';
   const widescreenPlaceholder = 'Placeholder-16x9_zpm4cq.jpg';
-  const institutionKey = venueKeyMaker(el.name);
-  const institution = {
-    [institutionKey]: {
-      name: el.name,
-      abbreviation: el.abbreviation === null ? null : el.abbreviation,
-      description: el.description,
-      website: el.website,
-      media: {
-        thumbnail: el.image_thumbnail === null ? thumbnailPlaceholder : el.image_thumbnail,
-        widescreen: el.image_widescreen === null ? widescreenPlaceholder : el.image_widescreen,
-      },
-      free_days: el.free_days === null ? null : el.free_days,
+  const venueKey = venueKeyMaker(el.name);
+  const venue = {
+    [venueKey]: {
       address: {
         formatted_address: formatAddress(el),
         street_number: el.street_number,
@@ -58,21 +61,6 @@ const buildObject = (el) => {
         state: el.state,
         state_short: el.state_short,
         postal_code: el.postal_code,
-      },
-      location: {},
-      related_venues: el.related_venues === null ? [] : [el.related_venues],
-      phone: {
-        main: formatPhoneNumber(el.phone_number),
-      },
-      hours: {
-        monday: el.monday,
-        tuesday: el.tuesday,
-        wednesday: el.wednesday,
-        thursday: el.thursday,
-        friday: el.friday,
-        saturday: el.saturday,
-        sunday: el.sunday,
-        closed_on: el.closed_on === null ? null : el.closed_on,
       },
       admission: [
         { type: 'Adult', price: el.adult_1, note: el.adult_1_note },
@@ -87,30 +75,53 @@ const buildObject = (el) => {
         { type: 'Disabled', price: el.disabled, note: el.disabled_note },
         { type: 'Military', price: el.military, note: el.military_note },
         { type: 'Other', price: el.other, note: el.other_note },
-      ].filter((admission) => { if (admission.note !== 'NULL') { return admission; } return false; }),
+      ].filter((admission) => {
+        if (admission.note !== 'NULL') { return admission; } return false;
+      }),
+      description: el.description,
+      events: objectMaker([el.event_1, el.event_2, el.event_3, el.event_4]),
+      free_days: el.free_days === null ? null : el.free_days,
+      hours: {
+        monday: el.monday,
+        tuesday: el.tuesday,
+        wednesday: el.wednesday,
+        thursday: el.thursday,
+        friday: el.friday,
+        saturday: el.saturday,
+        sunday: el.sunday,
+        closed_on: el.closed_on === null ? null : el.closed_on,
+      },
+      id: venueKey,
+      location: {},
+      media: {
+        thumbnail: el.image_thumbnail === null ? thumbnailPlaceholder : el.image_thumbnail,
+        widescreen: el.image_widescreen === null ? widescreenPlaceholder : el.image_widescreen,
+      },
+      name: {
+        abbreviation: el.abbreviation === null ? null : el.abbreviation,
+        full: el.name,
+        proper: properName(el.proper),
+      },
       parking: el.parking === 0 ? null : el.parking,
-      tags: [
-        el.tag_1,
-        el.tag_2,
-        el.tag_3,
-        el.tag_4,
-        el.tag_5].filter((tag) => { if (tag !== null || 0) { return tag; } return false; }),
+      phone: formatPhoneNumber(el.phone_number),
+      related_venues: objectMaker([el.related_1, el.related_2]),
+      tags: objectMaker([el.tag_1, el.tag_2, el.tag_3, el.tag_4, el.tag_5]),
+      website: el.website,
     },
   };
-  return institution;
+  return venue;
 };
 
 const writefileAsJson = (file, name) => {
   const f = JSON.stringify(file);
   fs.writeFileSync(`${name}.json`, f);
-  console.log(`File written as ${name}.json`);
+  console.log(`File written as ${name}.json`)  //eslint-disable-line
 };
 
 const originalVenues = {};
 
 book.getSheet('venues')
-  .then(data => {
-    return data.forEach((venue) => { Object.assign(originalVenues, buildObject(venue)); });
-  })
-  .then(data => { writefileAsJson(originalVenues, 'formatted'); })
-  .catch(error => { console.log(`Error: ${error}`); });
+  .then(data => (data.forEach((venue) => { Object.assign(originalVenues, buildObject(venue)); })
+  ))
+  .then(data => { writefileAsJson(originalVenues, 'formatted');})
+  .catch(error => { console.log(`Error: ${error}`) })  //eslint-disable-line
