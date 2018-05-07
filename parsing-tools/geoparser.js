@@ -1,15 +1,17 @@
 const fs = require('fs');
-const config = require('../config');
+const config = require('./config.js');
 const request = require('sync-request');
-const KEY = config.maps.apiKey;
-const URL = 'https://maps.googleapis.com/maps/api/geocode/json?';
-
+const log = require('loglevel');
+const APIKEY = config.maps.apiKey;
+const APIURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
 const venues = JSON.parse(fs.readFileSync('formatted.json', 'utf8'));
 const venueKeys = Object.keys(venues);
 
+log.enableAll();
+
 const getLocation = (venue) => {
   const res = request(
-    'GET', `${URL}address=${encodeURIComponent(venue.address.formatted_address)}&key=${KEY}`
+    'GET', `${APIURL}address=${encodeURIComponent(venue.address.formatted_address)}&key=${APIKEY}`
   );
   const body = JSON.parse(res.getBody('utf8'));
   if (body.results[0]) {
@@ -19,8 +21,8 @@ const getLocation = (venue) => {
 };
 
 venueKeys.forEach((key) => {
-  console.log(`Assigning Geolocation to ${venues[key].name.full}`); //eslint-disable-line
   venues[key].location = getLocation(venues[key]);
+  log.info(`Assigning Geolocation to ${venues[key].name.full}`);
 });
 
 fs.writeFile('final.json', JSON.stringify(venues));

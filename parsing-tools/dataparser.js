@@ -1,13 +1,9 @@
 // Pulls data from Fieldbook, parses it to JSON objects
-const config = require('../config');
 const fs = require('fs');
-const Fieldbook = require('node-fieldbook');
+const config = require('./config.js');
+const Fieldbook = require('fieldbook-client');
 
-const book = new Fieldbook({
-  username: config.fieldbook.username,
-  password: config.fieldbook.password,
-  book: config.fieldbook.book,
-});
+const client = new Fieldbook(config.fieldbook);
 
 const formatAddress = (el) => {
   if (el) {
@@ -31,6 +27,10 @@ const formatPhoneNumber = (phoneNumber) => {
   }
 };
 
+const stripUrlPrefix = (string) => (
+  string.split('/').pop()
+);
+
 const venueKeyMaker = (name) => (
   name.trim().replace(/[^A-Za-z0-9\s]/g, '').replace(/\s+/g, '-').toLowerCase()
 );
@@ -45,6 +45,7 @@ const properName = (string) => {
   if (string !== null) {
     return true;
   }
+  return false;
 };
 
 const buildObject = (el) => {
@@ -94,8 +95,10 @@ const buildObject = (el) => {
       id: venueKey,
       location: {},
       media: {
-        thumbnail: el.image_thumbnail === null ? thumbnailPlaceholder : el.image_thumbnail,
-        widescreen: el.image_widescreen === null ? widescreenPlaceholder : el.image_widescreen,
+        thumbnail: el.image_thumbnail === null ?
+          thumbnailPlaceholder : stripUrlPrefix(el.image_thumbnail),
+        widescreen: el.image_widescreen === null ?
+          widescreenPlaceholder : stripUrlPrefix(el.image_widescreen),
       },
       name: {
         abbreviation: el.abbreviation === null ? null : el.abbreviation,
@@ -120,8 +123,12 @@ const writefileAsJson = (file, name) => {
 
 const originalVenues = {};
 
-book.getSheet('venues')
-  .then(data => (data.forEach((venue) => { Object.assign(originalVenues, buildObject(venue)); })
+// client.list('venues').then(data => console.log(data));
+client.list('venues')
+  .then(data =>
+    (data.forEach((venue) => {
+      Object.assign(originalVenues, buildObject(venue));
+    })
   ))
-  .then(data => { writefileAsJson(originalVenues, 'formatted');})
-  .catch(error => { console.log(`Error: ${error}`) })  //eslint-disable-line
+  .then(() => { writefileAsJson(originalVenues, 'formatted');})
+  .catch(error => { console.log(`Error: ${error}`); }); //eslint-disable-line

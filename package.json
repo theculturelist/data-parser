@@ -10,6 +10,8 @@
   },
   "main": "dataparser.js",
   "dependencies": {
+    "fieldbook-client": "^1.0.7",
+    "loglevel": "^1.6.1",
     "node-fieldbook": "^1.1.1",
     "sync-request": "^3.0.0"
   },
